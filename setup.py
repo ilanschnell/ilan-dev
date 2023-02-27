@@ -26,7 +26,7 @@ setup(
         "Topic :: Utilities",
     ],
     description = "a few personal tools I use for development",
-    py_modules = ["perfect_hash"],
-    scripts = ['cleanup'],
+    py_modules = ["ilan_util"],
+    scripts = ['cleanup', 'tarinfo'],
     **kwds
 )
