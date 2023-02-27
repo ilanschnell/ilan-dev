@@ -25,7 +25,7 @@ setup(
         "Topic :: Utilities",
     ],
     description = "a few personal tools I use for development",
-    py_modules = ["ilan_util"],
+    py_modules = ["ilan_dev"],
     scripts = ['cleanup', 'tarinfo'],
     **kwds
 )
