@@ -2,7 +2,7 @@
 import re
 import tarfile
 
-from ilan_util import lcp, human_bytes, tar_nameset, tar_repack
+from ilan_dev import lcp, human_bytes, tar_nameset, tar_repack
 
 
 cext_pat = re.compile(r'''
