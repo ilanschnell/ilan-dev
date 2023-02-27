@@ -1,6 +1,7 @@
 import re
 from distutils.core import setup
 
+import ilan_util
 
 kwds = {}
 try:
@@ -11,12 +12,14 @@ except IOError:
 
 setup(
     name = "ilan-dev",
+    version = ilan_util.__version__,
     author = "Ilan Schnell",
     author_email = "ilanschnell@gmail.com",
     license = "BSD",
     classifiers = [
         "License :: OSI Approved :: Python Software Foundation License",
-        "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
+        "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",

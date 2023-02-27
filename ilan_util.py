@@ -2,6 +2,9 @@ import os
 import tarfile
 
 
+__version__ = "0.1.0"
+
+
 def lcp(a):
     """
     return longest common prefix of iterable of strings,
