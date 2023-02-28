@@ -2,7 +2,7 @@ import tarfile
 from os.path import dirname
 
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 
 def lcp(a):
