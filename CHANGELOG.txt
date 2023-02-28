@@ -1,5 +1,7 @@
 2023-XX-XX   0.1.2:
 -------------------
+  * remove `--dry-run` option from `cleanup`
+  * add `--ed` option to `tarfile`
 
 
 2023-02-26   0.1.1:

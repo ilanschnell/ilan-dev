@@ -2,7 +2,7 @@
 import re
 import tarfile
 
-from ilan_dev import lcp, human_bytes, tar_nameset, tar_repack
+from ilan_dev import lcp, human_bytes, tar_nameset, tar_get_empty_dirs
 
 
 cext_pat = re.compile(r'''
@@ -66,13 +66,13 @@ def main():
                  action="store_true",
                  help="show difference of two tarballs (archive names only)")
 
+    p.add_option('--ed',
+                 action="store_true",
+                 help="list empty directories")
+
     p.add_option('--lcp',
                  action="store_true",
                  help="show the longest common prefix of all archive names")
-
-    p.add_option('--repack',
-                 action="store_true",
-                 help="repack tarballs")
 
     p.add_option('--size',
                  action="store_true",
@@ -101,9 +101,10 @@ def main():
         if len(args) > 1:
             print("==> %s <==" % path)
 
-        if opts.repack:
-            print('repacking')
-            tar_repack(path)
+        if opts.ed:
+            for name in sorted(tar_get_empty_dirs(path)):
+                print(name)
+            continue
 
         with tarfile.open(path) as t:
             if opts.cext:

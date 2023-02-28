@@ -1,5 +1,6 @@
 import os
 import tarfile
+from os.path import dirname
 
 
 __version__ = "0.1.2"
@@ -43,21 +44,19 @@ def tar_nameset(path):
         return set(m.path for m in t.getmembers())
 
 
-def tar_repack(path, remove=None):
-    assert path.endswith(('.tgz', '.tar.gz'))
+def tar_get_empty_dirs(path):
+    "given a tarball, return set with all empty directories"
+    with tarfile.open(path) as t:
+        dirs1 = set()  # all directories listed in tarball
+        dirs2 = set()  # all directories that contain files
+        for m in t.getmembers():
+            if m.isdir():
+                dirs1.add(m.path)
+                continue
+            # for each file path, add the directories leading to its path
+            p = dirname(m.path)
+            while p not in dirs2:
+                dirs2.add(p)
+                p = dirname(p)
 
-    tmp_path = path + '.tmp'
-    os.replace(path, tmp_path)
-
-    # s -> t
-    with tarfile.open(tmp_path) as s:
-        with tarfile.open(path, 'w:gz') as t:
-            for member in s.getmembers():
-                if member.isdir():
-                    continue
-                path = member.path
-                if remove is not None and path in remove:
-                    continue
-                t.addfile(member, s.extractfile(path))
-
-    os.unlink(tmp_path)
+    return dirs1 - dirs2
