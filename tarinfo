@@ -57,22 +57,23 @@ def tar_show_diff(path_a, path_b):
 
 
 def show_stat(path):
-    nempty_dirs = len(tar_get_empty_dirs(path))
-    ntot = ndirs = nfiles = 0
+    ntot = nfiles = nsym = nlnk = ndirs = 0
     names = []
     with tarfile.open(path) as t:
         for m in t.getmembers():
             names.append(m.name)
             ntot += 1
-            if m.isdir():
-                ndirs += 1
-            if m.isfile():
-                nfiles += 1
+            if m.isfile(): nfiles += 1
+            if m.issym(): nsym += 1
+            if m.islnk(): nlnk += 1
+            if m.isdir(): ndirs += 1
 
-    print("       total archives: %7d" % ntot)
-    print("          directories: %7d" % ndirs)
-    print("           empty dirs: %7d" % nempty_dirs)
     print("        regular files: %7d" % nfiles)
+    print("       symbolic links: %7d" % nsym)
+    print("           hard links: %7d" % nlnk)
+    print("          directories: %7d" % ndirs)
+    print("           empty dirs: %7d" % len(tar_get_empty_dirs(path)))
+    print("       total archives: %7d" % ntot)
     print("longest common prefix: %r" % lcp(names))
 
 
