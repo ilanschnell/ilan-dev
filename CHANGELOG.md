@@ -1,4 +1,4 @@
-2023-XX-XX   0.2.0:
+2023-03-03   0.2.0:
 -------------------
   * `tarinfo` uses commands now (remove deprecated `optparse`)
   * add `ls` and `stat` command to `tarinfo`
