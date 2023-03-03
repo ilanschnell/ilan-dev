@@ -69,11 +69,11 @@ def show_stat(path):
             if m.isfile():
                 nfiles += 1
 
-    print("       total archives:  %5d" % ntot)
-    print("          directories:  %5d" % ndirs)
-    print("           empty dirs:  %5d" % nempty_dirs)
-    print("        regular files:  %5d" % nfiles)
-    print("longest common prefix:  %r" % lcp(names))
+    print("       total archives: %7d" % ntot)
+    print("          directories: %7d" % ndirs)
+    print("           empty dirs: %7d" % nempty_dirs)
+    print("        regular files: %7d" % nfiles)
+    print("longest common prefix: %r" % lcp(names))
 
 
 def help():
