@@ -3,6 +3,7 @@
   * `tarinfo` uses commands now (remove deprecated `optparse`)
   * add `ls` and `stat` command to `tarinfo`
   * add --version to `cleanup` and `tarinfo` commands
+  * add tests
 
 
 2023-02-28   0.1.2:
