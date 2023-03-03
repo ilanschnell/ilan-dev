@@ -5,7 +5,7 @@ import tarfile
 from os.path import basename
 
 import ilan_dev
-from ilan_dev import lcp, human_bytes, tar_get_empty_dirs
+from ilan_dev import lcp, human_bytes, get_empty_dirs
 
 
 cext_pat = re.compile(r'''
@@ -71,7 +71,7 @@ def show_stat(path):
     print("       symbolic links: %7d" % nsym)
     print("           hard links: %7d" % nlnk)
     print("          directories: %7d" % ndirs)
-    print("           empty dirs: %7d" % len(tar_get_empty_dirs(names)))
+    print("           empty dirs: %7d" % len(get_empty_dirs(names)))
     print("       total archives: %7d" % len(names))
     print("longest common prefix: %r" % lcp([name for name, _ in names]))
 

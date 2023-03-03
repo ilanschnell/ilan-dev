@@ -38,12 +38,12 @@ def human_bytes(n):
     return '%.2fG' % g
 
 
-def tar_get_empty_dirs(a):
+def get_empty_dirs(a):
     """
     given a list of tuple(name, isdir), return set with all empty directories
     """
-    dirs1 = set()  # all directories listed in tarball
-    dirs2 = set()  # all directories that contain files
+    dirs1 = set()  # all directories
+    dirs2 = set()  # all dirs that contain files
     for name, isdir in a:
         if isdir:
             dirs1.add(name)
