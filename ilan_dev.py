@@ -45,10 +45,10 @@ def tar_get_empty_dirs(path):
         dirs2 = set()  # all directories that contain files
         for m in t.getmembers():
             if m.isdir():
-                dirs1.add(m.path)
+                dirs1.add(m.name)
                 continue
             # for each file path, add the directories leading to its path
-            p = dirname(m.path)
+            p = dirname(m.name)
             while p not in dirs2:
                 dirs2.add(p)
                 p = dirname(p)

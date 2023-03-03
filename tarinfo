@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 import re
+import sys
 import tarfile
+from os.path import basename
 
 import ilan_dev
 from ilan_dev import lcp, human_bytes, tar_get_empty_dirs
-
-
-def tar_nameset(path):
-    with tarfile.open(path) as t:
-        return set(m.path for m in t.getmembers())
 
 
 cext_pat = re.compile(r'''
@@ -19,14 +16,20 @@ python\d\.\d+/
 \.cp[\w\-]+\.so
 $''', re.VERBOSE)
 
-def show_cext(t):
+def show_cext(path):
     res = []
-    for m in t.getmembers():
-        match = cext_pat.match(m.path)
-        if match is not None:
-            res.append(match.group('mod').replace('/', '.'))
+    with tarfile.open(path) as t:
+        for m in t.getmembers():
+            match = cext_pat.match(m.name)
+            if match is not None:
+                res.append(match.group('mod').replace('/', '.'))
     for mod in sorted(res):
         print('import', mod)
+
+
+def tar_nameset(path):
+    with tarfile.open(path) as t:
+        return set(m.name for m in t.getmembers())
 
 
 def tar_common(paths):
@@ -53,58 +56,54 @@ def tar_show_diff(path_a, path_b):
         print(s + str(e))
 
 
+def help():
+    print("""\
+usage: %s [options] COMMAND [TAR ...]",
+
+display useful information about tar files
+
+Commands:
+  cext        list Python C extension imports
+  common      list archive name common in all tarballs
+  diff        show difference of two tarballs (compares archive names only)
+  ed          list empty directories
+  lcp         show the longest common prefix of all archive names
+  ls          list archive members, similar to 'ls -l'
+  size        list file sizes of all archives (sorted by size)
+
+Options:
+  -h, --help  show this help message and exit
+  --version
+""" % basename(sys.argv[0]))
+
+
 def main():
-    from optparse import OptionParser
+    args = sys.argv[1:]
+    if len(args) == 0 or '-h' in args or '--help' in args:
+        help()
+        return
 
-    p = OptionParser(
-        usage="usage: %prog [options] TAR [TAR ...]",
-        description="display useful information about tar files")
-
-    p.add_option('--cext',
-                 action="store_true",
-                 help="list Python C extension imports")
-
-    p.add_option('--common',
-                 action="store_true",
-                 help="list archive name common in all tarballs")
-
-    p.add_option('--diff',
-                 action="store_true",
-                 help="show difference of two tarballs (archive names only)")
-
-    p.add_option('--ed',
-                 action="store_true",
-                 help="list empty directories")
-
-    p.add_option('--lcp',
-                 action="store_true",
-                 help="show the longest common prefix of all archive names")
-
-    p.add_option('--size',
-                 action="store_true",
-                 help="list file sizes of all archives (sorted by size)")
-
-    p.add_option("--version",
-                 action="store_true")
-
-    opts, args = p.parse_args()
-
-    if opts.version:
+    if "--version" in args:
         print("ilan-dev: %s" % ilan_dev.__version__)
         return
 
-    if opts.common:
+    cmd, args = args[0], args[1:]
+
+    if cmd == 'common':
         if len(args) == 0:
-            p.error("--common requires at least one arguments")
+            sys.exit("'common' requires at least one tar archive, try --help")
         for x in sorted(tar_common(args)):
             print(x)
         return
 
-    if opts.diff:
+    if cmd == 'diff':
         if len(args) != 2:
-            p.error("--diff requires exactly two arguments")
+            sys.exit("'diff' requires exactly two tar archives, try --help")
         tar_show_diff(*args)
         return
+
+    if '.' in cmd or '-' in cmd:
+        sys.exit("no such command %r, try --help" % cmd)
 
     for path in args:
         if not path.endswith(('.tar', '.tar.bz2', '.tar.gz', '.tgz')):
@@ -114,24 +113,31 @@ def main():
         if len(args) > 1:
             print("==> %s <==" % path)
 
-        if opts.ed:
+        if cmd == 'cext':
+            show_cext(path)
+
+        elif cmd == 'ed':
             for name in sorted(tar_get_empty_dirs(path)):
                 print(name)
-            continue
 
-        with tarfile.open(path) as t:
-            if opts.cext:
-                show_cext(t)
-
-            elif opts.lcp:
+        elif cmd == 'lcp':
+            with tarfile.open(path) as t:
                 s = lcp(m.name for m in t.getmembers())
                 if s:
                     print(s)
 
-            elif opts.size:
+        elif cmd == 'ls':
+            with tarfile.open(path) as t:
+                t.list()
+
+        elif cmd == 'size':
+            with tarfile.open(path) as t:
                 lst = [(m.size, m.name) for m in t.getmembers()]
                 for size, name in sorted(lst):
                     print("%-60s %10s" % (name, human_bytes(size)))
+
+        else:
+            sys.exit("no such command %r, try --help" % cmd)
 
 
 if __name__ == '__main__':
