@@ -38,19 +38,20 @@ def human_bytes(n):
     return '%.2fG' % g
 
 
-def tar_get_empty_dirs(path):
-    "given a tarball, return set with all empty directories"
-    with tarfile.open(path) as t:
-        dirs1 = set()  # all directories listed in tarball
-        dirs2 = set()  # all directories that contain files
-        for m in t.getmembers():
-            if m.isdir():
-                dirs1.add(m.name)
-                continue
-            # for each file path, add the directories leading to its path
-            p = dirname(m.name)
-            while p not in dirs2:
-                dirs2.add(p)
-                p = dirname(p)
+def tar_get_empty_dirs(a):
+    """
+    given a list of tuple(name, isdir), return set with all empty directories
+    """
+    dirs1 = set()  # all directories listed in tarball
+    dirs2 = set()  # all directories that contain files
+    for name, isdir in a:
+        if isdir:
+            dirs1.add(name)
+            continue
+        # for each file path, add the directories leading to its path
+        p = dirname(name)
+        while p not in dirs2:
+            dirs2.add(p)
+            p = dirname(p)
 
     return dirs1 - dirs2
