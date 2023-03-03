@@ -1,3 +1,7 @@
+2023-XX-XX   0.2.1:
+-------------------
+
+
 2023-03-03   0.2.0:
 -------------------
   * `tarinfo` uses commands now (remove deprecated `optparse`)
