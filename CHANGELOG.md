@@ -1,6 +1,7 @@
 2023-XX-XX   0.1.3:
 -------------------
-  * `tarinfo` uses commands now, adding `ls` (remove deprecated `optparse`)
+  * `tarinfo` uses commands now (remove deprecated `optparse`)
+  * add `ls` and `stat` command to `tarinfo`
   * add --version to `cleanup` and `tarinfo` commands
 
 

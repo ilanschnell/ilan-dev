@@ -56,6 +56,26 @@ def tar_show_diff(path_a, path_b):
         print(s + str(e))
 
 
+def show_stat(path):
+    nempty_dirs = len(tar_get_empty_dirs(path))
+    ntot = ndirs = nfiles = 0
+    names = []
+    with tarfile.open(path) as t:
+        for m in t.getmembers():
+            names.append(m.name)
+            ntot += 1
+            if m.isdir():
+                ndirs += 1
+            if m.isfile():
+                nfiles += 1
+
+    print("       total archives:  %5d" % ntot)
+    print("          directories:  %5d" % ndirs)
+    print("           empty dirs:  %5d" % nempty_dirs)
+    print("        regular files:  %5d" % nfiles)
+    print("longest common prefix:  %r" % lcp(names))
+
+
 def help():
     print("""\
 usage: %s [options] COMMAND [TAR ...]",
@@ -69,6 +89,7 @@ Commands:
   ed          list empty directories
   lcp         show the longest common prefix of all archive names
   ls          list archive members, similar to 'ls -l'
+  stat        display a useful summart of information
   size        list file sizes of all archives (sorted by size)
 
 Options:
@@ -135,6 +156,9 @@ def main():
                 lst = [(m.size, m.name) for m in t.getmembers()]
                 for size, name in sorted(lst):
                     print("%-60s %10s" % (name, human_bytes(size)))
+
+        elif cmd == 'stat':
+            show_stat(path)
 
         else:
             sys.exit("no such command %r, try --help" % cmd)
