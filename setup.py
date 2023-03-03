@@ -14,6 +14,7 @@ setup(
     version = ilan_dev.__version__,
     author = "Ilan Schnell",
     author_email = "ilanschnell@gmail.com",
+    url = "https://github.com/ilanschnell/ilan-dev",
     license = "BSD",
     classifiers = [
         "License :: OSI Approved :: Python Software Foundation License",
