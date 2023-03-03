@@ -37,10 +37,10 @@ def human_bytes(n):
     return '%.2fG' % g
 
 
-def get_empty_dirs(a):
+def get_dirs(a, mode='empty'):
     """
     given a list of tuples (name, isdir),
-    return set with all empty directories
+    return set of all empty directories
     """
     dirs1 = set()  # all directories
     dirs2 = set()  # all dirs that contain files
@@ -54,4 +54,9 @@ def get_empty_dirs(a):
             dirs2.add(p)
             p = dirname(p)
 
-    return dirs1 - dirs2
+    if mode == 'empty':
+        return dirs1 - dirs2
+    if mode == 'missing':
+        dirs2.discard('')
+        return dirs2 - dirs1
+    raise ValueError("did not expect mode %r" % mode)

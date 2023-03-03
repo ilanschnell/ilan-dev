@@ -6,7 +6,7 @@ import difflib
 from os.path import basename, isfile
 
 import ilan_dev
-from ilan_dev import lcp, human_bytes, get_empty_dirs
+from ilan_dev import lcp, human_bytes, get_dirs
 
 
 cext_pat = re.compile(r'''
@@ -63,7 +63,8 @@ def show_stat(path):
     print("       symbolic links: %7d" % nsym)
     print("           hard links: %7d" % nlnk)
     print("          directories: %7d" % ndirs)
-    print("           empty dirs: %7d" % len(get_empty_dirs(names)))
+    print("           empty dirs: %7d" % len(get_dirs(names, 'empty')))
+    print("         missing dirs: %7d" % len(get_dirs(names, 'missing')))
     print("       total archives: %7d" % len(names))
     print("           total size: %7s" % human_bytes(size))
     print("longest common prefix: %r" % lcp([name for name, _ in names]))
@@ -145,7 +146,7 @@ def main():
         if cmd == 'ed':
             with tarfile.open(path) as t:
                 lst = [(m.name, m.isdir()) for m in t.getmembers()]
-            for name in sorted(get_empty_dirs(lst)):
+            for name in sorted(get_dirs(lst, 'empty')):
                 print(name)
 
         if cmd == 'lcp':
