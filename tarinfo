@@ -2,7 +2,7 @@
 import re
 import sys
 import tarfile
-from os.path import basename
+from os.path import basename, isfile
 
 import ilan_dev
 from ilan_dev import lcp, human_bytes, get_empty_dirs
@@ -111,6 +111,9 @@ def main():
         return
 
     cmd, args = args[0], args[1:]
+    if cmd not in ['cext', 'common', 'diff', 'ed', 'lcp', 'ls',
+                   'stat', 'size']:
+        sys.exit("no such command %r, try --help" % cmd)
 
     if cmd == 'common':
         if len(args) == 0:
@@ -125,13 +128,9 @@ def main():
         tar_show_diff(*args)
         return
 
-    if '.' in cmd or '-' in cmd:
-        sys.exit("no such command %r, try --help" % cmd)
-
     for path in args:
-        if not path.endswith(('.tar', '.tar.bz2', '.tar.gz', '.tgz')):
-            print('ignoring:', path)
-            continue
+        if not isfile(path):
+            sys.exit("no such file: %r" % path)
 
         if len(args) > 1:
             print("==> %s <==" % path)
@@ -139,33 +138,30 @@ def main():
         if cmd == 'cext':
             show_cext(path)
 
-        elif cmd == 'ed':
+        if cmd == 'ed':
             with tarfile.open(path) as t:
                 lst = [(m.name, m.isdir()) for m in t.getmembers()]
             for name in sorted(get_empty_dirs(lst)):
                 print(name)
 
-        elif cmd == 'lcp':
+        if cmd == 'lcp':
             with tarfile.open(path) as t:
                 s = lcp(m.name for m in t.getmembers())
             if s:
                 print(s)
 
-        elif cmd == 'ls':
+        if cmd == 'ls':
             with tarfile.open(path) as t:
                 t.list()
 
-        elif cmd == 'size':
+        if cmd == 'size':
             with tarfile.open(path) as t:
                 lst = [(m.size, m.name) for m in t.getmembers()]
             for size, name in sorted(lst):
                 print("%-60s %10s" % (name, human_bytes(size)))
 
-        elif cmd == 'stat':
+        if cmd == 'stat':
             show_stat(path)
-
-        else:
-            sys.exit("no such command %r, try --help" % cmd)
 
 
 if __name__ == '__main__':
