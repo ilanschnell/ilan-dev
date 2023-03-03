@@ -3,7 +3,12 @@ import re
 import tarfile
 
 import ilan_dev
-from ilan_dev import lcp, human_bytes, tar_nameset, tar_get_empty_dirs
+from ilan_dev import lcp, human_bytes, tar_get_empty_dirs
+
+
+def tar_nameset(path):
+    with tarfile.open(path) as t:
+        return set(m.path for m in t.getmembers())
 
 
 cext_pat = re.compile(r'''

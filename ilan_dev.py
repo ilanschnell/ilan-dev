@@ -38,11 +38,6 @@ def human_bytes(n):
     return '%.2fG' % g
 
 
-def tar_nameset(path):
-    with tarfile.open(path) as t:
-        return set(m.path for m in t.getmembers())
-
-
 def tar_get_empty_dirs(path):
     "given a tarball, return set with all empty directories"
     with tarfile.open(path) as t:
