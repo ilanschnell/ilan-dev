@@ -142,14 +142,14 @@ def main():
         elif cmd == 'ed':
             with tarfile.open(path) as t:
                 lst = [(m.name, m.isdir()) for m in t.getmembers()]
-                for name in sorted(get_empty_dirs(lst)):
-                    print(name)
+            for name in sorted(get_empty_dirs(lst)):
+                print(name)
 
         elif cmd == 'lcp':
             with tarfile.open(path) as t:
                 s = lcp(m.name for m in t.getmembers())
-                if s:
-                    print(s)
+            if s:
+                print(s)
 
         elif cmd == 'ls':
             with tarfile.open(path) as t:
@@ -158,8 +158,8 @@ def main():
         elif cmd == 'size':
             with tarfile.open(path) as t:
                 lst = [(m.size, m.name) for m in t.getmembers()]
-                for size, name in sorted(lst):
-                    print("%-60s %10s" % (name, human_bytes(size)))
+            for size, name in sorted(lst):
+                print("%-60s %10s" % (name, human_bytes(size)))
 
         elif cmd == 'stat':
             show_stat(path)
