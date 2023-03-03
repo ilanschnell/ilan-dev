@@ -1,4 +1,3 @@
-import tarfile
 from os.path import dirname
 
 

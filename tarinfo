@@ -57,7 +57,7 @@ def tar_show_diff(path_a, path_b):
 
 
 def show_stat(path):
-    nfiles = nsym = nlnk = ndirs = 0
+    size = nfiles = nsym = nlnk = ndirs = 0
     names = []
     with tarfile.open(path) as t:
         for m in t.getmembers():
@@ -66,6 +66,7 @@ def show_stat(path):
             if m.issym(): nsym += 1
             if m.islnk(): nlnk += 1
             if m.isdir(): ndirs += 1
+            size += m.size
 
     print("        regular files: %7d" % nfiles)
     print("       symbolic links: %7d" % nsym)
@@ -73,6 +74,7 @@ def show_stat(path):
     print("          directories: %7d" % ndirs)
     print("           empty dirs: %7d" % len(get_empty_dirs(names)))
     print("       total archives: %7d" % len(names))
+    print("           total size: %7s" % human_bytes(size))
     print("longest common prefix: %r" % lcp([name for name, _ in names]))
 
 
@@ -138,8 +140,10 @@ def main():
             show_cext(path)
 
         elif cmd == 'ed':
-            for name in sorted(tar_get_empty_dirs(path)):
-                print(name)
+            with tarfile.open(path) as t:
+                lst = [(m.name, m.isdir()) for m in t.getmembers()]
+                for name in sorted(get_empty_dirs(lst)):
+                    print(name)
 
         elif cmd == 'lcp':
             with tarfile.open(path) as t:
