@@ -2,6 +2,7 @@
 import re
 import sys
 import tarfile
+import difflib
 from os.path import basename, isfile
 
 import ilan_dev
@@ -100,6 +101,20 @@ Options:
 """ % basename(sys.argv[0]))
 
 
+CMDS = ['cext', 'common', 'diff', 'ed', 'lcp', 'ls', 'stat', 'size']
+
+def check_commamd(cmd):
+    if cmd in CMDS:
+        return
+    print("no such command: %r" % cmd)
+    close_matches = difflib.get_close_matches(cmd, CMDS)
+    if close_matches:
+        print("did you mean %r?" % close_matches[0])
+    else:
+        print("commands are: %r" % CMDS)
+    return True
+
+
 def main():
     args = sys.argv[1:]
     if len(args) == 0 or '-h' in args or '--help' in args:
@@ -111,9 +126,8 @@ def main():
         return
 
     cmd, args = args[0], args[1:]
-    if cmd not in ['cext', 'common', 'diff', 'ed', 'lcp', 'ls',
-                   'stat', 'size']:
-        sys.exit("no such command %r, try --help" % cmd)
+    if check_commamd(cmd):
+        sys.exit(1)
 
     if cmd == 'common':
         if len(args) == 0:
