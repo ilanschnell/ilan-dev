@@ -3,8 +3,9 @@ dev:
 
 
 test:
-	./cleanup -h
-	./tarinfo -h
+	./cleanup --version
+	./tarinfo --version
+	python test-dev.py
 
 
 clean:

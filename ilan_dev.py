@@ -39,7 +39,8 @@ def human_bytes(n):
 
 def get_empty_dirs(a):
     """
-    given a list of tuple(name, isdir), return set with all empty directories
+    given a list of tuples (name, isdir),
+    return set with all empty directories
     """
     dirs1 = set()  # all directories
     dirs2 = set()  # all dirs that contain files
