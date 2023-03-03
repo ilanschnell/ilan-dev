@@ -29,17 +29,18 @@ class Tests(unittest.TestCase):
     def test_get_empty_dirs(self):
         self.assertEqual(get_empty_dirs([]), set())
 
-        lst = [
-            ('a',          1),
-            ('a/file',     0),
-            ('b',          1),
-            ('b/c',        1),
-            ('b/c/d',      1),
-            ('b/c/e',      1),
-            ('b/file',     0),
-        ]
+        lst = [(path, 'file' not in path) for path in [
+            'a',
+            'a/file',
+            'b',
+            'b/c',
+            'b/c/d',
+            'b/c/e',
+            'b/file',
+            'c',
+        ]]
         self.assertEqual(get_empty_dirs(lst),
-                         set(['b/c', 'b/c/d', 'b/c/e']))
+                         set(['b/c', 'b/c/d', 'b/c/e', 'c']))
 
 
 if __name__ == '__main__':
