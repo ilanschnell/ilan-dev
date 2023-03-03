@@ -17,7 +17,7 @@ python\d\.\d+/
 \.cp[\w\-]+\.so
 $''', re.VERBOSE)
 
-def show_cext(path):
+def tar_cext(path):
     res = []
     with tarfile.open(path) as t:
         for m in t.getmembers():
@@ -40,21 +40,11 @@ def tar_common(paths):
     return a
 
 
-def tar_show_diff(path_a, path_b):
-    a = tar_nameset(path_a)
-    b = tar_nameset(path_b)
-
-    lst = []
-    for c in a - b:
-        lst.append((c, '-'))
-    for c in b - a:
-        lst.append((c, '+'))
-    if not lst:
-        return
-    print('---', path_a)
-    print('+++', path_b)
-    for e, s in sorted(lst):
-        print(s + str(e))
+def tar_diff(path_a, path_b):
+    a = sorted(s + '\n' for s in tar_nameset(path_a))
+    b = sorted(s + '\n' for s in tar_nameset(path_b))
+    diff = difflib.unified_diff(a, b, fromfile=path_a, tofile=path_b)
+    sys.stdout.writelines(diff)
 
 
 def show_stat(path):
@@ -139,7 +129,7 @@ def main():
     if cmd == 'diff':
         if len(args) != 2:
             sys.exit("'diff' requires exactly two tar archives, try --help")
-        tar_show_diff(*args)
+        tar_diff(*args)
         return
 
     for path in args:
@@ -150,7 +140,7 @@ def main():
             print("==> %s <==" % path)
 
         if cmd == 'cext':
-            show_cext(path)
+            tar_cext(path)
 
         if cmd == 'ed':
             with tarfile.open(path) as t:
