@@ -2,6 +2,7 @@
 import re
 import tarfile
 
+import ilan_dev
 from ilan_dev import lcp, human_bytes, tar_nameset, tar_get_empty_dirs
 
 
@@ -78,7 +79,14 @@ def main():
                  action="store_true",
                  help="list file sizes of all archives (sorted by size)")
 
+    p.add_option("--version",
+                 action="store_true")
+
     opts, args = p.parse_args()
+
+    if opts.version:
+        print("ilan-dev: %s" % ilan_dev.__version__)
+        return
 
     if opts.common:
         if len(args) == 0:

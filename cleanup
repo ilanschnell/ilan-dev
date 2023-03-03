@@ -76,14 +76,22 @@ def main():
                      "make sure file has a newline at the end"))
 
     p.add_option("--ascii-only",
-        action="store_true",
-        help="allow only ASCII bytes (removes others)")
+                 action="store_true",
+                 help="allow only ASCII bytes (removes others)")
 
     p.add_option('-r', "--recur",
-        action="store_true",
-        help="cleanup recursively")
+                 action="store_true",
+                 help="cleanup recursively")
+
+    p.add_option("--version",
+                 action="store_true")
 
     opts, args = p.parse_args()
+
+    if opts.version:
+        import ilan_dev
+        print("ilan-dev: %s" % ilan_dev.__version__)
+        return
 
     global ASCII_ONLY
     ASCII_ONLY = opts.ascii_only
