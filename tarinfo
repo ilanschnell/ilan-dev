@@ -6,7 +6,7 @@ import difflib
 from os.path import basename, isfile
 
 import ilan_dev
-from ilan_dev import lcp, human_bytes, get_dirs
+from ilan_dev import lcp, human_bytes, get_empty_missing_dirs
 
 
 cext_pat = re.compile(r'''
@@ -59,12 +59,14 @@ def show_stat(path):
             if m.isdir(): ndirs += 1
             size += m.size
 
+    empty, missing = get_empty_missing_dirs(names)
+
     print("        regular files: %7d" % nfiles)
     print("       symbolic links: %7d" % nsym)
     print("           hard links: %7d" % nlnk)
     print("          directories: %7d" % ndirs)
-    print("           empty dirs: %7d" % len(get_dirs(names, 'empty')))
-    print("         missing dirs: %7d" % len(get_dirs(names, 'missing')))
+    print("           empty dirs: %7d" % len(empty))
+    print("         missing dirs: %7d" % len(missing))
     print("       total archives: %7d" % len(names))
     print("           total size: %7s" % human_bytes(size))
     print("longest common prefix: %r" % lcp([name for name, _ in names]))
@@ -80,7 +82,8 @@ Commands:
   cext        list Python C extension imports
   common      list archive name common in all tarballs
   diff        show difference of two tarballs (compares archive names only)
-  ed          list empty directories
+  empty       list empty directories
+  missing     list missing directories
   lcp         show the longest common prefix of all archive names
   ls          list archive members, similar to 'ls -l'
   stat        display a useful summart of information
@@ -92,7 +95,8 @@ Options:
 """ % basename(sys.argv[0]))
 
 
-CMDS = ['cext', 'common', 'diff', 'ed', 'lcp', 'ls', 'stat', 'size']
+CMDS = ['cext', 'common', 'diff', 'empty', 'missing',
+        'lcp', 'ls', 'stat', 'size']
 
 def check_commamd(cmd):
     if cmd in CMDS:
@@ -143,10 +147,12 @@ def main():
         if cmd == 'cext':
             tar_cext(path)
 
-        if cmd == 'ed':
+        if cmd in ('empty', 'missing'):
             with tarfile.open(path) as t:
                 lst = [(m.name, m.isdir()) for m in t.getmembers()]
-            for name in sorted(get_dirs(lst, 'empty')):
+            i = {'empty': 0, 'missing': 1}[cmd]
+            res = get_empty_missing_dirs(lst)[i]
+            for name in sorted(res):
                 print(name)
 
         if cmd == 'lcp':

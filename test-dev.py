@@ -1,6 +1,6 @@
 import unittest
 
-from ilan_dev import lcp, human_bytes, get_dirs
+from ilan_dev import lcp, human_bytes, get_empty_missing_dirs
 
 
 class Tests(unittest.TestCase):
@@ -40,17 +40,14 @@ class GetDirsTests(unittest.TestCase):
         'd/e/file',
         ]]
 
-    def test_empty(self):
-        self.assertEqual(get_dirs([], 'empty'), set())
+    def test_empty_input(self):
+        self.assertEqual(get_empty_missing_dirs([]),
+                         (set(), set()))
 
-        self.assertEqual(get_dirs(self.lst),  # default mode empty
-                         set(['b/c', 'b/c/d', 'b/c/e', 'c']))
-
-    def test_missing(self):
-        self.assertEqual(get_dirs([], 'missing'), set())
-
-        self.assertEqual(get_dirs(self.lst, 'missing'),
-                         set(['d', 'd/e']))
+    def test_lst(self):
+        self.assertEqual(get_empty_missing_dirs(self.lst),
+                         (set(['b/c', 'b/c/d', 'b/c/e', 'c']),
+                          set(['d', 'd/e'])))
 
 
 if __name__ == '__main__':
