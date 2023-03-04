@@ -1,7 +1,7 @@
 2023-XX-XX   0.2.1:
 -------------------
 
-* add `missing` commands to `tarinfo` to list missing directories
+* add `tarinfo missing` to list missing directories
 
 
 2023-03-03   0.2.0:
