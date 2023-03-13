@@ -12,10 +12,11 @@ from ilan_dev import lcp, human_bytes, get_empty_missing_dirs
 cext_pat = re.compile(r'''
 .*lib/
 python\d\.\d+/
-(site-packages|lib-dynload)/
+(site-packages|lib-dynload)/    # directories with C extensions
 (?P<mod>\S+?)                   # actual module name
-\.cp[\w\-]+\.so
-$''', re.VERBOSE)
+\.cp[\w\-]+\.so                 # file extension
+$                               # end of string
+''', re.VERBOSE)
 
 def tar_cext(path):
     res = []
