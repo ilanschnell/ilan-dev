@@ -14,7 +14,7 @@ cext_pat = re.compile(r'''
 python\d\.\d+/
 (site-packages|lib-dynload)/    # directories with C extensions
 (?P<mod>\S+?)                   # actual module name
-\.cp[\w\-]+\.so                 # file extension
+\.(abi|cp)[\w\-]+\.so           # file extension
 $                               # end of string
 ''', re.VERBOSE)
 
