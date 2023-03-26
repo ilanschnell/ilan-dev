@@ -9,6 +9,8 @@ class Tests(unittest.TestCase):
         self.assertTrue(lcp([]) is None)
 
         for lst, res in [
+                ([],                         None),
+                ([''],                       ''),
                 (['banana'],                 'banana'),
                 (['', 'pinetree'],           ''),
                 (['pineapple', 'pinetree'],  'pine'),
