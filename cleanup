@@ -72,13 +72,13 @@ def clean_dir(dir_path):
 
 
 def main():
-    p = ArgumentParser(
-        description=("Cleanup whitespace in FILE, that is: "
-                     "remove carriage returns; "
-                     "remove excess whitespace at the end of each line; "
-                     "expand tabs (to 8 spaces), but not a Makefile; "
-                     "make sure file has a newline at the end"))
-
+    p = ArgumentParser(description=("""
+Cleanup whitespace in FILE, that is:
+(a) remove carriage returns
+(b) remove excess whitespace at the end of each line
+(c) expand tabs (to 8 spaces), but not in a Makefile
+(d) make sure file has a newline at the end
+"""))
     p.add_argument("--ascii-only", action="store_true",
                    help="allow only ASCII bytes (removes others)")
 
