@@ -10,8 +10,11 @@ ASCII_ONLY = False
 VERBOSE = False
 
 # file extensions which are cleaned when using the -r option
-FILE_EXT = ('.py', '.txt', '.c', '.h', '.pyx', '.pyi', '.json',
+FILE_EXT = ('.py', '.txt', '.c', '.h', '.pyx', '.pyi',
             '.yml', '.yaml', '.md', '.rst', '.md', '.xml')
+
+# directories being ignored
+IGNORE_DIRS = ('.git', '__pycache__', '*.egg-info')
 
 
 def cleanup(data, expand_tabs=True):
@@ -60,10 +63,9 @@ def clean_dir(dir_path):
         return
 
     for root, dirs, files in os.walk(dir_path):
-        for pattern in '.git', '__pycache__', '*.egg-info':
-            for dn in list(dirs):
-                if fnmatch(dn, pattern):
-                    dirs.remove(dn)
+        for dn in list(dirs):
+            if any(fnmatch(dn, pat) for pat in IGNORE_DIRS):
+                dirs.remove(dn)
 
         for fn in files:
             if fn.endswith(FILE_EXT):
