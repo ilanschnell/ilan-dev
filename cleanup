@@ -10,7 +10,7 @@ ASCII_ONLY = False
 VERBOSE = False
 
 # file extensions which are cleaned when using the -r option
-FILE_EXT = ('.py', '.txt', '.c', '.h', '.pyx', '.pyi',
+FILE_EXT = ('.py', '.txt', '.c', '.h', '.pyx', '.pyi', '.sh',
             '.yml', '.yaml', '.md', '.rst', '.md', '.xml')
 
 # directories being ignored
