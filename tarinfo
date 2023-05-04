@@ -77,6 +77,19 @@ def show_stat(path):
     print("           total size: %7s" % human_bytes(size))
     print("longest common prefix: %r" % lcp([name for name, _ in names]))
 
+def tar_select(name, path):
+    try:
+        with tarfile.open(path) as t:
+            data = t.extractfile(name).read()
+    except KeyError as e:
+        print("Error: %s" % e)
+        return
+    try:
+        print(data.decode())
+    except UnicodeDecodeError:
+        print("size: %d bytes" % len(data))
+        print(data[:256])
+
 def help():
     print("""\
 usage: %s [options] COMMAND [TAR ...]",
@@ -84,15 +97,16 @@ usage: %s [options] COMMAND [TAR ...]",
 display useful information about tar files
 
 Commands:
-  cext        list Python C extension imports
-  common      list archive name common in all tarballs
-  diff        show difference of two tarballs (compares archive names only)
-  empty       list empty directories
-  missing     list missing directories
-  lcp         show the longest common prefix of all archive names
-  ls          list archive members, similar to 'ls -l'
-  stat        display a useful summart of information
-  size        list file sizes of all archives (sorted by size)
+  cext          list Python C extension imports
+  common        list archive name common in all tarballs
+  diff          show difference of two tarballs (compares archive names only)
+  empty         list empty directories
+  missing       list missing directories
+  lcp           show the longest common prefix of all archive names
+  ls            list archive members, similar to 'ls -l'
+  select NAME   show content of archive NAME
+  stat          display a useful summart of information
+  size          list file sizes of all archives (sorted by size)
 
 Options:
   -h, --help  show this help message and exit
@@ -100,7 +114,7 @@ Options:
 """ % basename(sys.argv[0]))
 
 CMDS = ['cext', 'common', 'diff', 'empty', 'missing',
-        'lcp', 'ls', 'stat', 'size']
+        'lcp', 'ls', 'select', 'stat', 'size']
 
 def check_commamd(cmd):
     if cmd in CMDS:
@@ -140,6 +154,11 @@ def main():
         tar_diff(*args)
         return
 
+    if cmd == 'select':
+        if len(args) == 0:
+            sys.exit("'select' requires NAME, try --help")
+        archive_name, args = args[0], args[1:]
+
     for path in args:
         if not isfile(path):
             sys.exit("no such file: %r" % path)
@@ -162,6 +181,9 @@ def main():
         if cmd == 'ls':
             with tarfile.open(path) as t:
                 t.list()
+
+        if cmd == 'select':
+            tar_select(archive_name, path)
 
         if cmd == 'size':
             with tarfile.open(path) as t:
