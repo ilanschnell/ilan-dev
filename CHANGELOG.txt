@@ -1,5 +1,6 @@
-2023-03-XX   0.2.2:
+2023-06-04   0.2.2:
 -------------------
+  * add select command to tarinfo
   * use `argparse` module in cleanup and improve ignoring directories
 
 
