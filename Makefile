@@ -1,3 +1,8 @@
+# release:
+# make clean
+# python setup.py sdist
+# twine upload --repository ilan-dev dist/ilan-dev-0.2.3.tar.gz
+
 dev:
 	python setup.py develop
 
