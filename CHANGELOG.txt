@@ -1,6 +1,7 @@
 2023-08-XX   0.2.3:
 -------------------
   * add elf command to tarinfo
+  * add number of ELF files to `tarinfo stat` output
 
 
 2023-06-04   0.2.2:
