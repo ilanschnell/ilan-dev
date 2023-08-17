@@ -54,12 +54,15 @@ def tar_empty_missing(path, cmd):
         print(name)
 
 def show_stat(path):
-    size = nfiles = nsym = nlnk = ndirs = 0
+    size = nfiles = nsym = nlnk = ndirs = nelf = 0
     names = []
     with tarfile.open(path) as t:
         for m in t.getmembers():
             names.append((m.name, m.isdir()))
-            if m.isfile(): nfiles += 1
+            if m.isfile():
+                nfiles += 1
+                if t.extractfile(m).read(4) == b'\x7fELF':
+                    nelf += 1
             if m.issym(): nsym += 1
             if m.islnk(): nlnk += 1
             if m.isdir(): ndirs += 1
@@ -74,6 +77,7 @@ def show_stat(path):
     print("           empty dirs: %7d" % len(empty))
     print("         missing dirs: %7d" % len(missing))
     print("       total archives: %7d" % len(names))
+    print("            ELF files: %7d" % nelf)
     print("           total size: %7s" % human_bytes(size))
     print("longest common prefix: %r" % lcp([name for name, _ in names]))
 
