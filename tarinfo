@@ -100,6 +100,7 @@ Commands:
   cext          list Python C extension imports
   common        list archive name common in all tarballs
   diff          show difference of two tarballs (compares archive names only)
+  elf           list ELF archive members
   empty         list empty directories
   missing       list missing directories
   lcp           show the longest common prefix of all archive names
@@ -113,7 +114,7 @@ Options:
   --version
 """ % basename(sys.argv[0]))
 
-CMDS = ['cext', 'common', 'diff', 'empty', 'missing',
+CMDS = ['cext', 'common', 'diff', 'elf', 'empty', 'missing',
         'lcp', 'ls', 'select', 'stat', 'size']
 
 def check_commamd(cmd):
@@ -168,6 +169,12 @@ def main():
 
         if cmd == 'cext':
             tar_cext(path)
+
+        if cmd == 'elf':
+            with tarfile.open(path) as t:
+                for m in t.getmembers():
+                    if m.isfile() and t.extractfile(m).read(4) == b'\x7fELF':
+                        print(m.name)
 
         if cmd in ('empty', 'missing'):
             tar_empty_missing(path, cmd)
